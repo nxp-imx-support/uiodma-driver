@@ -45,7 +45,7 @@ static ssize_t uiodma_dmaaddr_show(struct device *dev,
 DEVICE_ATTR_RO(uiodma_dmaaddr);
 
 static int uiodma_mmap(struct file *file, struct kobject *kobj,
-                       struct bin_attribute *attr, struct vm_area_struct *vma) {
+                       const struct bin_attribute *attr, struct vm_area_struct *vma) {
   struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
   struct uiodma *uiodma = pci_get_drvdata(pdev);
   phys_addr_t offset = (virt_to_phys(uiodma->hostptr)) >> PAGE_SHIFT;
@@ -64,7 +64,7 @@ static const struct attribute *uiodma_attrs[] = {
   NULL,
 };
 
-ssize_t uiodma_read(struct file *file, struct kobject *kobj, struct bin_attribute *attr,
+ssize_t uiodma_read(struct file *file, struct kobject *kobj, const struct bin_attribute *attr,
                     char *buf, loff_t offset, size_t size) {
   struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
   struct uiodma *uiodma = pci_get_drvdata(pdev);
@@ -74,7 +74,7 @@ ssize_t uiodma_read(struct file *file, struct kobject *kobj, struct bin_attribut
   return size;
 }
 
-ssize_t uiodma_write(struct file *file, struct kobject *kobj, struct bin_attribute *attr,
+ssize_t uiodma_write(struct file *file, struct kobject *kobj, const struct bin_attribute *attr,
                      char *buf, loff_t offset, size_t size) {
   struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
   struct uiodma *uiodma = pci_get_drvdata(pdev);
