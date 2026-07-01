@@ -19,7 +19,7 @@ The UIO DMA driver is an out-of-tree Linux kernel module that enables userspace 
 ### DMA Buffer Management for NPU
 
 The UIO DMA driver enables:
-- Zero-copy data transfer to Ara240 NPU
+- Zero-copy data transfer to the Ara240 NPU
 - Efficient input tensor allocation
 - Direct memory access for inference results
 - Reduced latency for AI/ML pipelines
@@ -29,13 +29,13 @@ The UIO DMA driver enables:
 
 This repository contains **two versions** of the driver:
 
-### 1.- `uiodma/` - Standard x86 Version
+### 1. `uiodma/` - Standard x86 Version
 
 - **Platform**: x86/x86_64 architectures
 - **Cache Model**: Cache-coherent systems
 - **Use Case**: Standard PC/server platforms with hardware cache coherency
 
-### 2️.- `uiodma_cache_management/` - NXP i.MX Version 
+### 2️. `uiodma_cache_management/` - NXP i.MX Version 
 
 - **Platform**: ARM-based NXP i.MX SoCs (i.MX 8M Plus, i.MX 95, etc.)
 - **Cache Model**: Implements explicit cache management operations
@@ -46,7 +46,7 @@ This repository contains **two versions** of the driver:
   - Proper handling of non-coherent DMA
   - Optimized for ARM memory subsystems
 
-> 💡 **Important**: Always use `uiodma_cache_management/` for NXP i.MX devices to ensure data coherency between CPU and DMA operations.
+> 💡 **Important**: Always use `uiodma_cache_management/` for NXP i.MX devices to ensure data coherency between the CPU and DMA operations.
 
 ---
 
@@ -68,7 +68,7 @@ sudo apt-get install linux-headers-$(uname -r)
 
 #### For NXP i.MX Yocto builds:
 
-Ensure kernel headers are available in your BSP. The kernel version should match your target device (e.g., 6.12.49-2.2.0 for recent i.MX releases).
+Ensure kernel headers are available in your BSP. The kernel version must match your target device (e.g., 6.18.20-2.0.0 for recent i.MX releases).
 
 ---
 
@@ -84,23 +84,15 @@ make
 
 ### For NXP i.MX Platforms (ARM)
 
-#### Option 1: Native build on i.MX device
+#### Cross-compilation on host PC
 
 ```bash
-cd uiodma_cache_management/
-make clean
-make
-```
-
-#### Option 2: Cross-compilation on host PC
-
-```bash
-source <toolchain-path>/environment-setup-armv8a-poky-linux
+source <toolchain-path>/environment-setup-armv8-2a-poky-linux
 cd uiodma_cache_management/
 make clean
 make KERNEL_SRC=<path-to-kernel-source>
 ```
-
+>  **Note**: The kernel specified by KERNEL_SRC must be built beforehand.
 ---
 
 ## Installation
@@ -117,7 +109,7 @@ sudo insmod uiodma/uiodma.ko
 
 #### ⚠️ **Critical**: SDK Integration Path
 
-When using with **rt-sdk-ara2** (Ara240 Runtime SDK) on i.MX devices, the module **must** be placed at:
+When using uiodma with **rt-sdk-ara2** (Ara240 Runtime SDK) on i.MX devices, the module **must** be placed at:
 
 ```
 /usr/share/rt-sdk-ara240/driver/uiodma.ko
@@ -129,7 +121,7 @@ When using with **rt-sdk-ara2** (Ara240 Runtime SDK) on i.MX devices, the module
 scp uiodma_cache_management/uiodma.ko root@<i.mx_ip_addr>:/usr/share/rt-sdk-ara240/driver/
 ```
 
->  **Note**: The Ara240 Runtime SDK expects the UIO DMA driver at this specific location. Do not modify the path unless you also update the Ara240 SDK configuration.
+>  **Note**: Modifying this path will require an update to the Ara240 SDK configuration.
 
 ---
 ## ⚖️ License
